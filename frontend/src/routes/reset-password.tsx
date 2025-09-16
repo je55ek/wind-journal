@@ -4,14 +4,14 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { FiLock } from "react-icons/fi"
 
-import { type ApiError, LoginService, type NewPassword } from "@/client"
+import { type ApiError, AuthenticationService, type ResetPassword } from "@/client"
 import { Button } from "@/components/ui/button"
 import { PasswordInput } from "@/components/ui/password-input"
 import { isLoggedIn } from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
 import { confirmPasswordRules, handleError, passwordRules } from "@/utils"
 
-interface NewPasswordForm extends NewPassword {
+interface ResetPasswordForm extends ResetPassword {
   confirm_password: string
 }
 
@@ -33,21 +33,21 @@ function ResetPassword() {
     getValues,
     reset,
     formState: { errors },
-  } = useForm<NewPasswordForm>({
+  } = useForm<ResetPasswordForm>({
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
-      new_password: "",
+      password: "",
     },
   })
   const { showSuccessToast } = useCustomToast()
   const navigate = useNavigate()
 
-  const resetPassword = async (data: NewPassword) => {
+  const resetPassword = async (data: ResetPassword) => {
     const token = new URLSearchParams(window.location.search).get("token")
     if (!token) return
-    await LoginService.resetPassword({
-      requestBody: { new_password: data.new_password, token: token },
+    await AuthenticationService.resetPassword({
+      requestBody: { password: data.password, token: token },
     })
   }
 
@@ -63,7 +63,7 @@ function ResetPassword() {
     },
   })
 
-  const onSubmit: SubmitHandler<NewPasswordForm> = async (data) => {
+  const onSubmit: SubmitHandler<ResetPasswordForm> = async (data) => {
     mutation.mutate(data)
   }
 
@@ -86,9 +86,9 @@ function ResetPassword() {
       </Text>
       <PasswordInput
         startElement={<FiLock />}
-        type="new_password"
+        type="password"
         errors={errors}
-        {...register("new_password", passwordRules())}
+        {...register("password", passwordRules())}
         placeholder="New Password"
       />
       <PasswordInput

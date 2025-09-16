@@ -20,10 +20,6 @@ export const Route = createFileRoute("/_layout/settings")({
 
 function UserSettings() {
   const { user: currentUser } = useAuth()
-  const finalTabs = currentUser?.is_superuser
-    ? tabsConfig.slice(0, 3)
-    : tabsConfig
-
   if (!currentUser) {
     return null
   }
@@ -36,13 +32,13 @@ function UserSettings() {
 
       <Tabs.Root defaultValue="my-profile" variant="subtle">
         <Tabs.List>
-          {finalTabs.map((tab) => (
+          {tabsConfig.map((tab) => (
             <Tabs.Trigger key={tab.value} value={tab.value}>
               {tab.title}
             </Tabs.Trigger>
           ))}
         </Tabs.List>
-        {finalTabs.map((tab) => (
+        {tabsConfig.map((tab) => (
           <Tabs.Content key={tab.value} value={tab.value}>
             <tab.component />
           </Tabs.Content>

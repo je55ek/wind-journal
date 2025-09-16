@@ -7,12 +7,12 @@ import {
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { FiLock, FiUser } from "react-icons/fi"
 
-import type { UserRegister } from "@/client"
+import type { UserCreate } from "@/client"
 import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { InputGroup } from "@/components/ui/input-group"
 import { PasswordInput } from "@/components/ui/password-input"
-import useAuth, { isLoggedIn } from "@/hooks/useAuth"
+import { isLoggedIn } from "@/hooks/useAuth"
 import { confirmPasswordRules, emailPattern, passwordRules } from "@/utils"
 import Logo from "/assets/images/windjournal-logo.png"
 
@@ -27,12 +27,11 @@ export const Route = createFileRoute("/signup")({
   },
 })
 
-interface UserRegisterForm extends UserRegister {
+interface UserRegisterForm extends UserCreate {
   confirm_password: string
 }
 
 function SignUp() {
-  const { signUpMutation } = useAuth()
   const {
     register,
     handleSubmit,
@@ -43,14 +42,14 @@ function SignUp() {
     criteriaMode: "all",
     defaultValues: {
       email: "",
-      full_name: "",
+      name: "",
       password: "",
       confirm_password: "",
     },
   })
 
   const onSubmit: SubmitHandler<UserRegisterForm> = (data) => {
-    signUpMutation.mutate(data)
+    console.log(data)
   }
 
   return (
@@ -76,17 +75,17 @@ function SignUp() {
             mb={4}
           />
           <Field
-            invalid={!!errors.full_name}
-            errorText={errors.full_name?.message}
+            invalid={!!errors.name}
+            errorText={errors.name?.message}
           >
             <InputGroup w="100%" startElement={<FiUser />}>
               <Input
                 id="full_name"
                 minLength={3}
-                {...register("full_name", {
-                  required: "Full Name is required",
+                {...register("name", {
+                  required: "Name is required",
                 })}
-                placeholder="Full Name"
+                placeholder="Name"
                 type="text"
               />
             </InputGroup>

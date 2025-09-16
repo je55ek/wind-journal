@@ -14,7 +14,7 @@ import { type SubmitHandler, useForm } from "react-hook-form"
 import {
   type ApiError,
   type UserPublic,
-  type UserUpdateMe,
+  type UserUpdate,
   UsersService,
 } from "@/client"
 import useAuth from "@/hooks/useAuth"
@@ -37,7 +37,7 @@ const UserInformation = () => {
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
-      full_name: currentUser?.full_name,
+      name: currentUser?.name,
       email: currentUser?.email,
     },
   })
@@ -47,8 +47,8 @@ const UserInformation = () => {
   }
 
   const mutation = useMutation({
-    mutationFn: (data: UserUpdateMe) =>
-      UsersService.updateUserMe({ requestBody: data }),
+    mutationFn: (data: UserUpdate) =>
+      UsersService.updateUser({ userId: currentUser?.id!, requestBody: data }),
     onSuccess: () => {
       showSuccessToast("User updated successfully.")
     },
@@ -60,7 +60,7 @@ const UserInformation = () => {
     },
   })
 
-  const onSubmit: SubmitHandler<UserUpdateMe> = async (data) => {
+  const onSubmit: SubmitHandler<UserUpdate> = async (data) => {
     mutation.mutate(data)
   }
 
@@ -80,10 +80,10 @@ const UserInformation = () => {
           as="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Field label="Full name">
+          <Field label="Name">
             {editMode ? (
               <Input
-                {...register("full_name", { maxLength: 30 })}
+                {...register("name", { maxLength: 30 })}
                 type="text"
                 size="md"
                 w="auto"
@@ -92,11 +92,11 @@ const UserInformation = () => {
               <Text
                 fontSize="md"
                 py={2}
-                color={!currentUser?.full_name ? "gray" : "inherit"}
+                color={!currentUser?.name ? "gray" : "inherit"}
                 truncate
                 maxWidth="250px"
               >
-                {currentUser?.full_name || "N/A"}
+                {currentUser?.name || "N/A"}
               </Text>
             )}
           </Field>
