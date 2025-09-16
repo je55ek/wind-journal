@@ -48,7 +48,7 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]
 
-    LOGIN_ENDPOINT: str = "/login"
+    LOGIN_ENDPOINT: str = "/login/access-token"
     PASSWORD_RESET_ENDPOINT: str = "/reset-password"
     PROJECT_NAME: str
     POSTGRES_SERVER: str
