@@ -1,5 +1,5 @@
-import { Box, Container, Text } from "@chakra-ui/react"
-import { createFileRoute } from "@tanstack/react-router"
+import { Box, Button, Container, Heading, Text } from "@chakra-ui/react"
+import { createFileRoute, Link } from "@tanstack/react-router"
 
 import useAuth from "@/hooks/useAuth"
 
@@ -14,10 +14,15 @@ function Dashboard() {
     <>
       <Container maxW="full">
         <Box pt={12} m={4}>
-          <Text fontSize="2xl">
-            Hi, {currentUser?.full_name || currentUser?.email} 👋🏼
-          </Text>
+          <Heading size="2xl">
+            Hi, {currentUser?.name} 👋🏼
+          </Heading>
           <Text>Welcome back, nice to see you again!</Text>
+          <Link to="/sessions/new">
+            <Button mt={4} colorScheme="blue">
+              New Session
+            </Button>
+          </Link>
         </Box>
       </Container>
     </>
