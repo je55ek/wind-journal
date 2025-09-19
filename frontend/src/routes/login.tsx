@@ -7,7 +7,7 @@ import {
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { FiLock, FiMail } from "react-icons/fi"
 
-import type { Body_login_login_access_token as AccessToken } from "@/client"
+import type { Body_authentication_login  } from "@/client"
 import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { InputGroup } from "@/components/ui/input-group"
@@ -33,7 +33,7 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<AccessToken>({
+  } = useForm<Body_authentication_login>({
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
@@ -42,7 +42,7 @@ function Login() {
     },
   })
 
-  const onSubmit: SubmitHandler<AccessToken> = async (data) => {
+  const onSubmit: SubmitHandler<Body_authentication_login> = async (data) => {
     if (isSubmitting) return
 
     resetError()
