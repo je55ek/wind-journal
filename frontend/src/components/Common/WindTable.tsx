@@ -8,11 +8,17 @@ interface WindTableProps {
 }
 
 function WindTable({ firstHour, lastHour }: WindTableProps) {
-    return (
+    return !(isNaN(firstHour) || isNaN(lastHour)) && (lastHour >= firstHour) ? (
         <Stack direction="row" gap="1px">
             <For each={Array.from({ length: lastHour - firstHour + 1 }, (_, i) => i + firstHour)}>
                 {(hour) => <WindTableColumn hour={hour} />}
             </For>
+        </Stack>
+    ) : (
+        <Stack direction="row" gap="1px">
+            <WindTableColumn hour={undefined} />
+            <WindTableColumn hour={undefined} />
+            <WindTableColumn hour={undefined} />
         </Stack>
     )
 }

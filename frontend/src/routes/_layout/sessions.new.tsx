@@ -1,5 +1,5 @@
 import { Box, Button, Container, Field, Heading, HStack, Input, Portal, SegmentGroup, Select, Stack, Text, VStack, createListCollection} from "@chakra-ui/react"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch, Control } from "react-hook-form"
 import { createFileRoute } from "@tanstack/react-router"
 import { GiMineExplosion, GiTurtle, GiHandOk } from "react-icons/gi"
 
@@ -39,6 +39,17 @@ const sports = createListCollection({
     { label: "Wing Foiling", value: "wingfoiling" },
   ],
 })
+
+function WindTableWrapper({ control }: { control: Control<NewSessionForm> }) {
+  const startTimeString = useWatch({ control, name: 'startTime' })
+  const endTimeString = useWatch({ control, name: 'endTime' })
+
+  const firstHour = parseInt(startTimeString?.substring(0, 2))
+  const lastHour = parseInt(endTimeString?.substring(0, 2))
+
+  return <WindTable firstHour={firstHour} lastHour={lastHour} />
+}
+
 
 function NewSession() {
   const now = (new Date())
@@ -162,11 +173,11 @@ function NewSession() {
         <HStack gap="6">
           <VStack align="flex-start">
             <Text>Forecast (kts)</Text>
-            <WindTable firstHour={12} lastHour={15} />
+            <WindTableWrapper control={control} lastHour={15} />
           </VStack>
           <VStack align="flex-start">
             <Text>Actual (kts)</Text>
-            <WindTable firstHour={12} lastHour={15} />
+            <WindTableWrapper control={control} lastHour={15} />
           </VStack>
         </HStack>
         <Button type="submit">
