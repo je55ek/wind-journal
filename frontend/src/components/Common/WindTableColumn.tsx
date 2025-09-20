@@ -7,7 +7,6 @@ import {
   Skeleton,
   Stack,
   createListCollection,
-  useEditableContext,
   useSelectContext,
 } from "@chakra-ui/react"
 import { type ReactNode, useState } from "react"

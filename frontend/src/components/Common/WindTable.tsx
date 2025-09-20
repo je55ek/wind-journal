@@ -22,9 +22,9 @@ function WindTable({ firstHour, lastHour }: WindTableProps) {
     </Stack>
   ) : (
     <Stack direction="row" gap="1px">
-      <WindTableColumn hour={undefined} />
-      <WindTableColumn hour={undefined} />
-      <WindTableColumn hour={undefined} />
+      <WindTableColumn hour={Number.NaN} />
+      <WindTableColumn hour={Number.NaN} />
+      <WindTableColumn hour={Number.NaN} />
     </Stack>
   )
 }
