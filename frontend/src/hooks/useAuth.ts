@@ -3,9 +3,9 @@ import { useNavigate } from "@tanstack/react-router"
 import { useState } from "react"
 
 import {
+  type ApiError,
   AuthenticationService,
   type Body_authentication_login as LoginData,
-  type ApiError,
   type UserPublic,
   UsersService,
 } from "@/client"
@@ -23,7 +23,6 @@ const useAuth = () => {
     queryFn: UsersService.getMe,
     enabled: isLoggedIn(),
   })
-
 
   const login = async (data: LoginData) => {
     const response = await AuthenticationService.login({

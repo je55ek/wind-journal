@@ -74,10 +74,7 @@ function SignUp() {
             alignSelf="center"
             mb={4}
           />
-          <Field
-            invalid={!!errors.name}
-            errorText={errors.name?.message}
-          >
+          <Field invalid={!!errors.name} errorText={errors.name?.message}>
             <InputGroup w="100%" startElement={<FiUser />}>
               <Input
                 id="full_name"

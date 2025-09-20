@@ -5,7 +5,7 @@ export const buttonRecipe = defineRecipe({
     fontWeight: "bold",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   variants: {
     variant: {
@@ -14,12 +14,12 @@ export const buttonRecipe = defineRecipe({
         color: "white",
         _hover: {
           bg: "ui.hover",
-          color: "ui.main"
+          color: "ui.main",
         },
         _expanded: {
           bg: "ui.hover",
-          color: "ui.main"
-        }
+          color: "ui.main",
+        },
       },
       ghost: {
         bg: "transparent",

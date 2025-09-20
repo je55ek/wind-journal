@@ -4,7 +4,11 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { FiLock } from "react-icons/fi"
 
-import { type ApiError, AuthenticationService, type ResetPassword } from "@/client"
+import {
+  type ApiError,
+  AuthenticationService,
+  type ResetPassword,
+} from "@/client"
 import { Button } from "@/components/ui/button"
 import { PasswordInput } from "@/components/ui/password-input"
 import { isLoggedIn } from "@/hooks/useAuth"

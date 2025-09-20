@@ -1,35 +1,55 @@
-import { Box, Button, Container, Field, Heading, HStack, Input, Portal, SegmentGroup, Select, Stack, Text, VStack, createListCollection} from "@chakra-ui/react"
-import { Controller, useForm, useWatch, Control } from "react-hook-form"
+import {
+  Box,
+  Button,
+  Container,
+  Field,
+  HStack,
+  Heading,
+  Input,
+  Portal,
+  SegmentGroup,
+  Select,
+  Stack,
+  Text,
+  VStack,
+  createListCollection,
+} from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { GiMineExplosion, GiTurtle, GiHandOk } from "react-icons/gi"
+import { type Control, Controller, useForm, useWatch } from "react-hook-form"
+import { GiHandOk, GiMineExplosion, GiTurtle } from "react-icons/gi"
 
 import WindTable from "@/components/Common/WindTable"
 
 export const Route = createFileRoute("/_layout/sessions/new")({
-  component: NewSession
+  component: NewSession,
 })
 
 interface NewSessionForm {
-  date: string,
-  startTime: string,
-  endTime: string,
-  location: string,
-  sport: "windsurfing" | "wingfoiling",
-  equipment: string,
+  date: string
+  startTime: string
+  endTime: string
+  location: string
+  sport: "windsurfing" | "wingfoiling"
+  equipment: string
   powerLevel: "underpowered" | "wellpowered" | "overpowered"
 }
 
-function item(currentValue: string, value: string, label: string, icon: JSX.Element) {
+function item(
+  currentValue: string,
+  value: string,
+  label: string,
+  icon: JSX.Element,
+) {
   return {
     value,
     label: (
-      <Box color={currentValue == value ? "white" : "black"}>
+      <Box color={currentValue === value ? "white" : "black"}>
         <HStack>
           {icon}
           {label}
         </HStack>
       </Box>
-    )
+    ),
   }
 }
 

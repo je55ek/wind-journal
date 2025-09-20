@@ -11,17 +11,17 @@ import type {
   AuthenticationResetPasswordData,
   AuthenticationResetPasswordResponse,
   HealthResponse,
-  UsersGetUsersData,
-  UsersGetUsersResponse,
   UsersCreateUserData,
   UsersCreateUserResponse,
+  UsersDeleteUserData,
+  UsersDeleteUserResponse,
   UsersGetMeResponse,
   UsersGetUserData,
   UsersGetUserResponse,
+  UsersGetUsersData,
+  UsersGetUsersResponse,
   UsersUpdateUserData,
   UsersUpdateUserResponse,
-  UsersDeleteUserData,
-  UsersDeleteUserResponse,
 } from "./types.gen"
 
 export class AuthenticationService {

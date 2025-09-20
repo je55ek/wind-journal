@@ -21,7 +21,14 @@ function Navbar() {
       p={4}
     >
       <Link to="/">
-        <Image src={Logo} alt="WindJournal" w="250px" maxW="2xs" px={2} mb={-2} />
+        <Image
+          src={Logo}
+          alt="WindJournal"
+          w="250px"
+          maxW="2xs"
+          px={2}
+          mb={-2}
+        />
       </Link>
       <Flex gap={2} alignItems="center">
         <UserMenu />
