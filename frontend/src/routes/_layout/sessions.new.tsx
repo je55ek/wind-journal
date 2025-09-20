@@ -224,7 +224,7 @@ function NewSession() {
                       <GiMineExplosion />,
                     ),
                   ]}
-                ></SegmentGroup.Items>
+                />
               </SegmentGroup.Root>
               <Field.ErrorText>{errors.powerLevel?.message}</Field.ErrorText>
             </Field.Root>
