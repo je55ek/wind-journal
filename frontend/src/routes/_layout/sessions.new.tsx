@@ -41,30 +41,37 @@ const sports = createListCollection({
 })
 
 function WindTableWrapper({ control }: { control: Control<NewSessionForm> }) {
-  const startTimeString = useWatch({ control, name: 'startTime' })
-  const endTimeString = useWatch({ control, name: 'endTime' })
+  const startTimeString = useWatch({ control, name: "startTime" })
+  const endTimeString = useWatch({ control, name: "endTime" })
 
-  const firstHour = parseInt(startTimeString?.substring(0, 2))
-  const lastHour = parseInt(endTimeString?.substring(0, 2))
+  const firstHour = Number.parseInt(startTimeString?.substring(0, 2))
+  const lastHour = Number.parseInt(endTimeString?.substring(0, 2))
 
   return <WindTable firstHour={firstHour} lastHour={lastHour} />
 }
 
-
 function NewSession() {
-  const now = (new Date())
+  const now = new Date()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control
+    control,
   } = useForm<NewSessionForm>({
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
-      date: now.toLocaleDateString('en-CA', { year: "numeric", month: "2-digit", day: "2-digit" }),
-      endTime: now.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", hour12: false })
+      date: now.toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }),
+      endTime: now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
     },
   })
 
@@ -76,31 +83,41 @@ function NewSession() {
       pt={12}
       m={4}
     >
-      <Heading size="2xl">
-        Log a session
-      </Heading>
+      <Heading size="2xl">Log a session</Heading>
       <Stack gap="4" pt={4} align="flex-start" maxW="lg">
         <Field.Root orientation="horizontal" required invalid={!!errors.date}>
           <Field.Label>Date</Field.Label>
           <Input type="date" {...register("date")} />
           <Field.ErrorText>{errors.date?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root orientation="horizontal" required invalid={!!errors.startTime}>
+        <Field.Root
+          orientation="horizontal"
+          required
+          invalid={!!errors.startTime}
+        >
           <Field.Label>Start time</Field.Label>
           <Input type="time" {...register("startTime")} />
           <Field.ErrorText>{errors.startTime?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root orientation="horizontal" required invalid={!!errors.endTime}>
+        <Field.Root
+          orientation="horizontal"
+          required
+          invalid={!!errors.endTime}
+        >
           <Field.Label>End time</Field.Label>
           <Input type="time" {...register("endTime")} />
           <Field.ErrorText>{errors.endTime?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root orientation="horizontal" required invalid={!!errors.location}>
+        <Field.Root
+          orientation="horizontal"
+          required
+          invalid={!!errors.location}
+        >
           <Field.Label>Location</Field.Label>
           <Input {...register("location")} />
           <Field.ErrorText>{errors.location?.message}</Field.ErrorText>
         </Field.Root>
-<Field.Root orientation="horizontal" required invalid={!!errors.sport}>
+        <Field.Root orientation="horizontal" required invalid={!!errors.sport}>
           <Field.Label>Sport</Field.Label>
           <Controller
             control={control}
@@ -139,7 +156,11 @@ function NewSession() {
           />
           <Field.ErrorText>{errors.sport?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root orientation="horizontal" required invalid={!!errors.equipment}>
+        <Field.Root
+          orientation="horizontal"
+          required
+          invalid={!!errors.equipment}
+        >
           <Field.Label>Equipment</Field.Label>
           <Input {...register("equipment")} />
           <Field.ErrorText>{errors.equipment?.message}</Field.ErrorText>
@@ -148,25 +169,44 @@ function NewSession() {
           control={control}
           name="powerLevel"
           render={({ field }) => (
-             <Field.Root justifyContent="flex-start" orientation="horizontal" required invalid={!!errors.powerLevel}>
-             <Field.Label>Power</Field.Label>
+            <Field.Root
+              justifyContent="flex-start"
+              orientation="horizontal"
+              required
+              invalid={!!errors.powerLevel}
+            >
+              <Field.Label>Power</Field.Label>
               <SegmentGroup.Root
-              name={field.name}
-              onBlur={field.onBlur}
-              onValueChange={({ value }) => field.onChange(value)}
-              value={field.value}
+                name={field.name}
+                onBlur={field.onBlur}
+                onValueChange={({ value }) => field.onChange(value)}
+                value={field.value}
               >
                 <SegmentGroup.Indicator bg="ui.main" />
                 <SegmentGroup.Items
                   items={[
-                    item(field.value, "underpowered", "Underpowered", <GiTurtle />),
-                    item(field.value, "wellpowered", "Well Powered", <GiHandOk />),
-                    item(field.value, "overpowered", "Overpowered", <GiMineExplosion />)
+                    item(
+                      field.value,
+                      "underpowered",
+                      "Underpowered",
+                      <GiTurtle />,
+                    ),
+                    item(
+                      field.value,
+                      "wellpowered",
+                      "Well Powered",
+                      <GiHandOk />,
+                    ),
+                    item(
+                      field.value,
+                      "overpowered",
+                      "Overpowered",
+                      <GiMineExplosion />,
+                    ),
                   ]}
-                >
-              </SegmentGroup.Items>
+                ></SegmentGroup.Items>
               </SegmentGroup.Root>
-               <Field.ErrorText>{errors.powerLevel?.message}</Field.ErrorText>
+              <Field.ErrorText>{errors.powerLevel?.message}</Field.ErrorText>
             </Field.Root>
           )}
         />
@@ -180,9 +220,7 @@ function NewSession() {
             <WindTableWrapper control={control} lastHour={15} />
           </VStack>
         </HStack>
-        <Button type="submit">
-          Done
-        </Button>
+        <Button type="submit">Done</Button>
       </Stack>
     </Container>
   )
