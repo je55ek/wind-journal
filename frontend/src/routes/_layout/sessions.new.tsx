@@ -15,10 +15,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { type Control, Controller, useForm, useWatch } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
+import { useState } from "react"
 import { GiHandOk, GiMineExplosion, GiTurtle } from "react-icons/gi"
 
-import WindTable from "@/components/Common/WindTable"
+import { WindTable, WindValue } from "@/components/Common/WindTable"
 
 export const Route = createFileRoute("/_layout/sessions/new")({
   component: NewSession,
@@ -60,18 +61,51 @@ const sports = createListCollection({
   ],
 })
 
-function WindTableWrapper({ control }: { control: Control<NewSessionForm> }) {
-  const startTimeString = useWatch({ control, name: "startTime" })
-  const endTimeString = useWatch({ control, name: "endTime" })
-
-  const firstHour = Number.parseInt(startTimeString?.substring(0, 2))
-  const lastHour = Number.parseInt(endTimeString?.substring(0, 2))
-
-  return <WindTable firstHour={firstHour} lastHour={lastHour} />
-}
 
 function NewSession() {
   const now = new Date()
+  const [startTime, setStartTime] = useState("")
+  const [endTime, setEndTime] = useState(
+    now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }))
+
+  const [forecastWindValues, setForecastWindValues] = useState<WindValue[]>([])
+
+  function onTimeChange(firstHour: number, lastHour: number) {
+    const hours = (lastHour - firstHour + 1)
+
+    if (hours > forecastWindValues.length) {
+      const additionalValues: WindValue[] = Array.from({ length: hours - forecastWindValues.length }, (_, __) => { return {} })
+      setForecastWindValues([...forecastWindValues, ...additionalValues])
+    }
+  }
+
+  function onStartTimeChange(newValue: string) {
+    const firstHour = Number.parseInt(newValue.substring(0, 2))
+    const lastHour = Number.parseInt(endTime.substring(0, 2))
+
+    onTimeChange(firstHour, lastHour)
+    setStartTime(newValue)
+  }
+
+  function onEndTimeChange(newValue: string) {
+    const firstHour = Number.parseInt(startTime.substring(0, 2))
+    const lastHour = Number.parseInt(newValue.substring(0, 2))
+
+    onTimeChange(firstHour, lastHour)
+    setEndTime(newValue)
+  }
+
+  function onWindValueChange(hour: number, value: WindValue) {
+    const firstHour = Number.parseInt(startTime.substring(0, 2))
+    const index = hour - firstHour
+
+    setForecastWindValues([...forecastWindValues.slice(0, index), value, ...forecastWindValues.slice(index + 1)])
+  }
+
 
   const {
     register,
@@ -86,14 +120,12 @@ function NewSession() {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-      }),
-      endTime: now.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }),
+      })
     },
   })
+
+  const firstHour = Number.parseInt(startTime.substring(0, 2))
+  const lastHour = Number.parseInt(endTime.substring(0, 2))
 
   return (
     <Container
@@ -116,7 +148,12 @@ function NewSession() {
           invalid={!!errors.startTime}
         >
           <Field.Label>Start time</Field.Label>
-          <Input type="time" {...register("startTime")} />
+          <Input
+            type="time"
+            {...register("startTime")}
+            value={startTime}
+            onChange={(e) => onStartTimeChange(e.target.value)}
+          />
           <Field.ErrorText>{errors.startTime?.message}</Field.ErrorText>
         </Field.Root>
         <Field.Root
@@ -125,7 +162,12 @@ function NewSession() {
           invalid={!!errors.endTime}
         >
           <Field.Label>End time</Field.Label>
-          <Input type="time" {...register("endTime")} />
+          <Input
+            type="time"
+            {...register("endTime")}
+            value={endTime}
+            onChange={(e) => onEndTimeChange(e.target.value)}
+          />
           <Field.ErrorText>{errors.endTime?.message}</Field.ErrorText>
         </Field.Root>
         <Field.Root
@@ -185,17 +227,17 @@ function NewSession() {
           <Input {...register("equipment")} />
           <Field.ErrorText>{errors.equipment?.message}</Field.ErrorText>
         </Field.Root>
-        <Controller
-          control={control}
-          name="powerLevel"
-          render={({ field }) => (
-            <Field.Root
-              justifyContent="flex-start"
-              orientation="horizontal"
-              required
-              invalid={!!errors.powerLevel}
-            >
-              <Field.Label>Power</Field.Label>
+        <Field.Root
+          justifyContent="flex-start"
+          orientation="horizontal"
+          required
+          invalid={!!errors.powerLevel}
+        >
+          <Field.Label>Power</Field.Label>
+          <Controller
+            control={control}
+            name="powerLevel"
+            render={({ field }) => (
               <SegmentGroup.Root
                 name={field.name}
                 onBlur={field.onBlur}
@@ -226,18 +268,18 @@ function NewSession() {
                   ]}
                 />
               </SegmentGroup.Root>
-              <Field.ErrorText>{errors.powerLevel?.message}</Field.ErrorText>
-            </Field.Root>
-          )}
-        />
+            )}
+          />
+          <Field.ErrorText>{errors.powerLevel?.message}</Field.ErrorText>
+        </Field.Root>
         <HStack gap="6">
           <VStack align="flex-start">
             <Text>Forecast (kts)</Text>
-            <WindTableWrapper control={control} lastHour={15} />
+            <WindTable firstHour={firstHour} lastHour={lastHour} values={forecastWindValues} onValueChange={onWindValueChange} />
           </VStack>
           <VStack align="flex-start">
             <Text>Actual (kts)</Text>
-            <WindTableWrapper control={control} lastHour={15} />
+            <WindTable firstHour={firstHour} lastHour={lastHour} values={[]} onValueChange={onWindValueChange} />
           </VStack>
         </HStack>
         <Button type="submit">Done</Button>
