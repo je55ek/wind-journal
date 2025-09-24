@@ -2,7 +2,7 @@ import {
   Box,
   Editable,
   IconButton,
-  ListCollection,
+  type ListCollection,
   Portal,
   Select,
   Skeleton,
@@ -10,7 +10,7 @@ import {
   createListCollection,
   useSelectContext,
 } from "@chakra-ui/react"
-import { type ReactElement } from "react"
+import type { ReactElement } from "react"
 import {
   MdEast,
   MdNorth,
@@ -24,18 +24,22 @@ import {
 import { RiForbidLine } from "react-icons/ri"
 
 export interface WindValue {
-  averageSpeedKts?: number,
-  gustSpeedKts?: number,
-  directionDegrees?: number,
+  averageSpeedKts?: number
+  gustSpeedKts?: number
+  directionDegrees?: number
 }
 
 interface WindTableColumnProps {
-  hour: number,
-  value: WindValue | null,
-  onValueChange: (hour: number, value: WindValue) => void,
+  hour: number
+  value: WindValue | null
+  onValueChange: (hour: number, value: WindValue) => void
 }
 
-export function WindTableColumn({ hour, value, onValueChange }: WindTableColumnProps) {
+export function WindTableColumn({
+  hour,
+  value,
+  onValueChange,
+}: WindTableColumnProps) {
   const loading = Number.isNaN(hour)
   const hour_12 = ((Math.round(hour) + 11) % 12) + 1
 
@@ -56,12 +60,19 @@ export function WindTableColumn({ hour, value, onValueChange }: WindTableColumnP
           placeholder="avg"
           w="full"
           css={{
-            background: cellBackgroundColor(value?.averageSpeedKts ?? Number.NaN),
+            background: cellBackgroundColor(
+              value?.averageSpeedKts ?? Number.NaN,
+            ),
           }}
           textAlign="center"
           justifyContent="center"
           value={value?.averageSpeedKts?.toString() ?? ""}
-          onValueChange={(e) => onValueChange(hour, {...(value ?? {}), averageSpeedKts: parseFloat(e.value)})}
+          onValueChange={(e) =>
+            onValueChange(hour, {
+              ...(value ?? {}),
+              averageSpeedKts: Number.parseFloat(e.value),
+            })
+          }
         >
           <Editable.Preview />
           <Editable.Input rounded="0" />
@@ -77,7 +88,12 @@ export function WindTableColumn({ hour, value, onValueChange }: WindTableColumnP
           textAlign="center"
           justifyContent="center"
           value={value?.gustSpeedKts?.toString() ?? ""}
-          onValueChange={(e) => onValueChange(hour, {...(value ?? {}), gustSpeedKts: parseFloat(e.value)})}
+          onValueChange={(e) =>
+            onValueChange(hour, {
+              ...(value ?? {}),
+              gustSpeedKts: Number.parseFloat(e.value),
+            })
+          }
         >
           <Editable.Preview />
           <Editable.Input rounded="0" />
@@ -86,7 +102,14 @@ export function WindTableColumn({ hour, value, onValueChange }: WindTableColumnP
           collection={directions}
           defaultValue={["N"]}
           value={[degreesToDirection(value?.directionDegrees ?? 0)]}
-          onValueChange={(e) => onValueChange(hour, {...(value ?? {}), directionDegrees: directionToDegrees(e.value[0] as CardinalDirection)})}
+          onValueChange={(e) =>
+            onValueChange(hour, {
+              ...(value ?? {}),
+              directionDegrees: directionToDegrees(
+                e.value[0] as CardinalDirection,
+              ),
+            })
+          }
         >
           <Select.HiddenSelect />
           <Select.Control>
@@ -118,8 +141,8 @@ export function WindTableColumn({ hour, value, onValueChange }: WindTableColumnP
 type CardinalDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW"
 
 interface Direction {
-  value: CardinalDirection,
-  icon: ReactElement,
+  value: CardinalDirection
+  icon: ReactElement
 }
 
 const directions: ListCollection<Direction> = createListCollection({
@@ -135,13 +158,12 @@ const directions: ListCollection<Direction> = createListCollection({
   ],
 })
 
-
 function degreesToDirection(degrees: number): CardinalDirection {
-  return directions.items[Math.round(((degrees % 360) / 45)) % 8].value
+  return directions.items[Math.round((degrees % 360) / 45) % 8].value
 }
 
 function directionToDegrees(direction: CardinalDirection): number {
-  return directions.items.findIndex(({value}) => value == direction) * 45
+  return directions.items.findIndex(({ value }) => value === direction) * 45
 }
 
 function cellBackgroundColor(value: number) {
@@ -159,9 +181,11 @@ function cellBackgroundColor(value: number) {
   const i = stops.findIndex((s) => value < s.max)
   const [c1, c2] = stops.slice(i - 1, i + 1)
 
-  return !c1 || !c2 ? "var(--chakra-colors-gray-100)" : `color-mix(in hsl decreasing hue, ${c1.color}, ${c2.color} ${
-    ((value - c1.max) / (c2.max - c1.max)) * 100
-  }%)`
+  return !c1 || !c2
+    ? "var(--chakra-colors-gray-100)"
+    : `color-mix(in hsl decreasing hue, ${c1.color}, ${c2.color} ${
+        ((value - c1.max) / (c2.max - c1.max)) * 100
+      }%)`
 }
 
 const WindTableDirectionTrigger = () => {

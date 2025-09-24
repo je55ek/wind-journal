@@ -15,11 +15,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { Controller, useForm } from "react-hook-form"
 import { useState } from "react"
+import { Controller, useForm } from "react-hook-form"
 import { GiHandOk, GiMineExplosion, GiTurtle } from "react-icons/gi"
 
-import { WindTable, WindValue } from "@/components/Common/WindTable"
+import { WindTable, type WindValue } from "@/components/Common/WindTable"
 
 export const Route = createFileRoute("/_layout/sessions/new")({
   component: NewSession,
@@ -61,7 +61,6 @@ const sports = createListCollection({
   ],
 })
 
-
 function NewSession() {
   const now = new Date()
   const [startTime, setStartTime] = useState("")
@@ -70,15 +69,21 @@ function NewSession() {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-    }))
+    }),
+  )
 
   const [forecastWindValues, setForecastWindValues] = useState<WindValue[]>([])
 
   function onTimeChange(firstHour: number, lastHour: number) {
-    const hours = (lastHour - firstHour + 1)
+    const hours = lastHour - firstHour + 1
 
     if (hours > forecastWindValues.length) {
-      const additionalValues: WindValue[] = Array.from({ length: hours - forecastWindValues.length }, (_, __) => { return {} })
+      const additionalValues: WindValue[] = Array.from(
+        { length: hours - forecastWindValues.length },
+        (_, __) => {
+          return {}
+        },
+      )
       setForecastWindValues([...forecastWindValues, ...additionalValues])
     }
   }
@@ -103,9 +108,12 @@ function NewSession() {
     const firstHour = Number.parseInt(startTime.substring(0, 2))
     const index = hour - firstHour
 
-    setForecastWindValues([...forecastWindValues.slice(0, index), value, ...forecastWindValues.slice(index + 1)])
+    setForecastWindValues([
+      ...forecastWindValues.slice(0, index),
+      value,
+      ...forecastWindValues.slice(index + 1),
+    ])
   }
-
 
   const {
     register,
@@ -120,7 +128,7 @@ function NewSession() {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-      })
+      }),
     },
   })
 
@@ -275,11 +283,21 @@ function NewSession() {
         <HStack gap="6">
           <VStack align="flex-start">
             <Text>Forecast (kts)</Text>
-            <WindTable firstHour={firstHour} lastHour={lastHour} values={forecastWindValues} onValueChange={onWindValueChange} />
+            <WindTable
+              firstHour={firstHour}
+              lastHour={lastHour}
+              values={forecastWindValues}
+              onValueChange={onWindValueChange}
+            />
           </VStack>
           <VStack align="flex-start">
             <Text>Actual (kts)</Text>
-            <WindTable firstHour={firstHour} lastHour={lastHour} values={[]} onValueChange={onWindValueChange} />
+            <WindTable
+              firstHour={firstHour}
+              lastHour={lastHour}
+              values={[]}
+              onValueChange={onWindValueChange}
+            />
           </VStack>
         </HStack>
         <Button type="submit">Done</Button>

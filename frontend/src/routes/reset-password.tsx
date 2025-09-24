@@ -7,7 +7,7 @@ import { FiLock } from "react-icons/fi"
 import {
   type ApiError,
   AuthenticationService,
-  type ResetPassword,
+  type ResetPassword as ResetPasswordType,
 } from "@/client"
 import { Button } from "@/components/ui/button"
 import { PasswordInput } from "@/components/ui/password-input"
@@ -15,7 +15,7 @@ import { isLoggedIn } from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
 import { confirmPasswordRules, handleError, passwordRules } from "@/utils"
 
-interface ResetPasswordForm extends ResetPassword {
+interface ResetPasswordForm extends ResetPasswordType {
   confirm_password: string
 }
 
@@ -47,7 +47,7 @@ function ResetPassword() {
   const { showSuccessToast } = useCustomToast()
   const navigate = useNavigate()
 
-  const resetPassword = async (data: ResetPassword) => {
+  const resetPassword = async (data: ResetPasswordType) => {
     const token = new URLSearchParams(window.location.search).get("token")
     if (!token) return
     await AuthenticationService.resetPassword({
